@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "game_portal.accounts",
     "game_portal.profiles",
     "game_portal.games",
+    "game_portal.social",
     "django_prometheus",
 ]
 

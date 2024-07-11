@@ -55,6 +55,7 @@ urlpatterns = [
         game_views.LeaderboardView.as_view(),
         name="get_game_leaderboard",
     ),
+    # path('friends/', include('social.urls')),
 ]
 
 if settings.DEBUG:

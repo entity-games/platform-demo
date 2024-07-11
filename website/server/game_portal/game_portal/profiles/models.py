@@ -15,6 +15,7 @@ class Profile(models.Model):
     location: models.CharField = models.CharField(max_length=30, blank=True)
     level: models.IntegerField = models.IntegerField(default=1)
     xp: models.IntegerField = models.IntegerField(default=0)
+    online: models.BooleanField = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f"Profile: {self.user.username}"
