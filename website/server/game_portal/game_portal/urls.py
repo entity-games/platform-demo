@@ -15,7 +15,6 @@ from .profiles import views as profile_views
 from .profiles.serializers import ProfileTokenObtainPairSerializer
 from .games import views as game_views
 
-
 user_api_router = routers.DefaultRouter()
 user_api_router.register(r"users", user_views.UserViewSet)
 
@@ -55,8 +54,9 @@ urlpatterns = [
         game_views.LeaderboardView.as_view(),
         name="get_game_leaderboard",
     ),
-    # path('friends/', include('social.urls')),
+    path('friends/', include('game_portal.social.urls')),
 ]
+
 
 if settings.DEBUG:
     urlpatterns += staticfiles_urlpatterns()
