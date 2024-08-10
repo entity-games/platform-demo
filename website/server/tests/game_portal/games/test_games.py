@@ -40,8 +40,8 @@ class TestGameViewset:
 
     def test_game_viewset_get_games_list(self, api_client):
         url = reverse("game-list")
-        refresh = RefreshToken.for_user(self.test_user)
-        api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")
+        # refresh = RefreshToken.for_user(self.test_user)
+        # api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")
         response = api_client.get(url)
         assert response.status_code == 200
         assert len(response.data["results"]) == 1
