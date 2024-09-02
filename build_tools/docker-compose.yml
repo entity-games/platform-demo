@@ -30,6 +30,10 @@ services:
       network: host
     ports:
       - "8000:8000"
+    environment:
+      LIVEKIT_SOCKET_URL: "${LIVEKIT_SOCKET_URL}"
+      LIVEKIT_API_KEY: "${LIVEKIT_API_KEY}"
+      LIVEKIT_API_SECRET: "${LIVEKIT_API_SECRET}"
     depends_on:
       - gameportaldb
       - redis-db

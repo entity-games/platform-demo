@@ -50,3 +50,12 @@ class TestAccounts:
         names = [x['friend_name'] for x in response.data]
         assert 'test_friend' in names
         assert 'test_friend2' in names
+
+    def test_create_group(self, api_client):
+        url = reverse("create_group", args=["test_group"]) 
+        refresh = RefreshToken.for_user(self.test_user)
+        api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")
+        response = api_client.post(url)
+        assert response.status_code == 200
+
+
