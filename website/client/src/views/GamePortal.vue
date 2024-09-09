@@ -41,7 +41,7 @@
 </template>
 
 <script>
-    import { runWithRetries, loadActiveGames } from '../utils.js'
+    import { runWithRetries, loadActiveGames, loadFriendList } from '../utils.js'
 
     export default {
         name: 'game_portal',
@@ -97,7 +97,8 @@
                         obj => obj.game_id === 'exrps'
                     )[0]
                 }
-            }]) 
+            }])
+            loadFriendList(this.$store)
         }
     }
 

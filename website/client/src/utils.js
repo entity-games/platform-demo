@@ -40,4 +40,12 @@ function loadActiveGames (store, callback, onError) {
   })
 }
 
-export { loadActiveGames, runWithRetries }
+function loadFriendList(store) {
+  axios.get(`${store.state.serverUrl}/friends/list`).then(resp => {
+    store.commit('setFriendList', resp.data)
+  }).catch(error => {
+    alert(error)
+  })
+}
+
+export { loadActiveGames, runWithRetries, loadFriendList }

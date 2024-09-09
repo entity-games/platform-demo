@@ -1,9 +1,9 @@
 <template>
 
     <div>
-        <wp-top-bar/> 
+        <!-- <wp-top-bar/>  -->
         <wp-active-game :selected-game="selectedGame"/>
-        <wp-footer/>
+        <!-- <wp-footer/> -->
     </div>
 
 </template>

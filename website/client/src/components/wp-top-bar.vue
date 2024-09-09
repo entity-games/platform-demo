@@ -3,7 +3,7 @@
   <div :class="fullScreenHeader ? 'fs-header' : 'header-wrapper'" class="row">
       
       <router-link :to="'/'" class="naked-link">
-        <h1 class="header-text">Varcade Games</h1>
+        <h1 class="header-text">ENTITY GAMES</h1>
       </router-link>     
       
       <div v-if="showLoginOption" class="ml-auto">
@@ -14,10 +14,17 @@
           type="button">
             Sign In
         </button>
-
-        <a v-else href="#" @click="logout()">
-            Log Out
-        </a>
+        
+        <div v-else>
+          <a href="#" @click.prevent="openModal">Friends</a>
+          <!-- Modal -->
+          <wp-friend-groups v-if="isModalVisible" @close="closeModal" />
+          
+          <b>&nbsp;|&nbsp;</b>
+          <a href="#" @click="logout()">
+              Log Out
+          </a>
+        </div>
       </div>
       
   </div>
@@ -41,6 +48,7 @@ export default {
   components: {},
   data () {
       return {
+        isModalVisible: false
       }
   },
   computed: {
@@ -60,6 +68,12 @@ export default {
     },
     logout: function() {
       return this.$store.dispatch('logout')
+    },
+    openModal() {
+      this.isModalVisible = true;
+    },
+    closeModal() {
+      this.isModalVisible = false;
     }
 
   }

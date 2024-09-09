@@ -120,17 +120,17 @@
     }
 
     .game-root {
-        height: 100vh;
-        display: flex;
-        margin: 2rem 0;
-        justify-content: center;
+        /* height: 100vh; */
+        /* display: flex; */
+        /* margin: 2rem 0; */
+        /* justify-content: center; */
     }
 
     .game-container {
-        max-width: 960px;
-        max-height: 640px;
-        width: 100%;
-        height: 100%;
+        /* max-width: 960px;
+        max-height: 640px; */
+        width: 100vw;
+        /* height: 100%; */
     }
     
 </style>

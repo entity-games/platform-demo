@@ -10,7 +10,7 @@ import { showErrorModal } from '../ui_elements/modals'
 // Gameplay
 import { SinglePlayerGame } from '../game_engine_interface.js'
 
-import { getSceneLayoutData } from '../game_data/layout.js'
+import { getSceneLayoutData, getBounds } from '../game_data/layout.js'
 
 class MainMenuScene extends Phaser.Scene {
   constructor () {
@@ -32,7 +32,9 @@ class MainMenuScene extends Phaser.Scene {
       bgLayout.x, bgLayout.y, 'mainMenuBg'
     ).setOrigin(
       bgLayout.originX, bgLayout.originY
-    )
+    ).setDisplaySize(
+      getBounds().w, getBounds().h
+    ) 
 
     /**
       SINGLE PLAYER SELECT

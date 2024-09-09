@@ -5,18 +5,17 @@ RUN apk add git
 
 RUN mkdir /game_rps
 RUN mkdir /game_rps/client
-WORKDIR /game_rps
+WORKDIR /game_rps/client
 
-ADD game_engine ./game_engine
 
-ADD client/src ./client/src
-ADD client/webpack ./client/webpack
-ADD client/package.json ./client
-ADD client/index.html ./client
-ADD client/.babelrc ./client
-
-WORKDIR client
+ADD client/package.json ./
 RUN npm update
 RUN npm install
+
+ADD game_engine /game_rps/game_engine
+ADD client/src ./src
+ADD client/webpack ./webpack
+ADD client/index.html ./
+ADD client/.babelrc ./
 
 CMD npm run start

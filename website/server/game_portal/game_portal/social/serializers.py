@@ -19,6 +19,11 @@ class FriendSerializer(serializers.ModelSerializer):
     def get_friend_name(self, obj):
         return obj.friend.username
 
+class UserGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ['id', 'name', 'description']
+
 class GroupMembershipSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 

@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 
 import { audioManager } from '../audio_manager.js'
 
-import { getSceneLayoutData } from '../game_data/layout.js'
+import { getSceneLayoutData, getBounds } from '../game_data/layout.js'
 
 import { RPSGameMode } from 'rps-game-engine'
 
@@ -40,6 +40,8 @@ const VSScene = new Phaser.Class({
       this.layoutData.ui.background.originY
     ).setAlpha(
       0.3
+    ).setDisplaySize(
+      getBounds().w, getBounds().h
     )
 
     const p1Layout = this.layoutData.graphics.p1
@@ -54,6 +56,11 @@ const VSScene = new Phaser.Class({
     ).setVisible(
       false
     )
+
+    let desiredHeight = getBounds().h;
+    this.p1CharacterImage.displayHeight = desiredHeight;
+    let aspectRatio = this.p1CharacterImage.width / this.p1CharacterImage.height;
+    this.p1CharacterImage.displayWidth = desiredHeight * aspectRatio;
 
     const p1MaskShape = this.make.graphics()
     p1MaskShape.fillStyle(0xffffff)
@@ -76,6 +83,13 @@ const VSScene = new Phaser.Class({
     )
     this.p2CharacterImage.flipX = true
 
+    desiredHeight = getBounds().h;
+    this.p2CharacterImage.displayHeight = desiredHeight;
+    aspectRatio = this.p2CharacterImage.width / this.p2CharacterImage.height;
+    this.p2CharacterImage.displayWidth = desiredHeight * aspectRatio;
+
+
+
     const p2MaskShape = this.make.graphics()
     p2MaskShape.fillStyle(0xffffff)
     p2MaskShape.beginPath()
@@ -90,6 +104,8 @@ const VSScene = new Phaser.Class({
     ).setOrigin(
       this.layoutData.ui.background.originX,
       this.layoutData.ui.background.originY
+    ).setDisplaySize(
+      getBounds().w, getBounds().h
     )
 
     this.add.sprite(
@@ -100,6 +116,8 @@ const VSScene = new Phaser.Class({
     ).setOrigin(
       this.layoutData.ui.vsIcon.originX,
       this.layoutData.ui.vsIcon.originY
+    ).setDisplaySize(
+      getBounds().w * 0.2, getBounds().h * 0.2
     )
   },
 
@@ -243,7 +261,7 @@ const VSScene = new Phaser.Class({
 
   startBattleScene: function () {
     console.log('Opening battle scene...')
-    this.scene.start('BattleScene', { gameInterface: this.gameInterface })
+    // this.scene.start('BattleScene', { gameInterface: this.gameInterface })
   }
 
 })

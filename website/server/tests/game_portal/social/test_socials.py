@@ -4,7 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from game_portal.accounts.models import Account
 from game_portal.social.views import FriendListView
-from game_portal.social.models import FriendManager
+from game_portal.social.models import FriendManager, Group, GroupMembership
 
 
 class TestAccounts:
@@ -20,7 +20,7 @@ class TestAccounts:
         )
 
     def test_add_friend_success(self, api_client):
-        url = reverse("add_friend", args=[self.test_friend.id])        
+        url = reverse("add_friend", args=[self.test_friend.username])        
         refresh = RefreshToken.for_user(self.test_user)
         api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")
         response = api_client.post(url)
@@ -57,5 +57,39 @@ class TestAccounts:
         api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")
         response = api_client.post(url)
         assert response.status_code == 200
+
+    def test_add_to_group(self, api_client):
+        group = Group.objects.create(name="test_group", description="")
+        GroupMembership.objects.create(user=self.test_user, group=group, is_admin=True)
+        url = reverse("add_group_member", args=[group.id, self.test_friend.id]) 
+        refresh = RefreshToken.for_user(self.test_user)
+        api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")
+        response = api_client.post(url)
+        assert response.status_code == 200
+
+        group = Group.objects.get(id=group.id)
+        members = group.members.all()
+        assert len(members) == 2
+        assert self.test_user in members
+        assert self.test_friend in members
+
+    def test_list_groups(self, api_client):
+        group = Group.objects.create(name="test_group_lists", description="")
+        GroupMembership.objects.create(user=self.test_user, group=group, is_admin=True)
+
+        group2 = Group.objects.create(name="test_group_lists_2", description="")
+        GroupMembership.objects.create(user=self.test_user, group=group2, is_admin=True)
+
+        url = reverse("group_list") 
+        refresh = RefreshToken.for_user(self.test_user)
+        api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")
+        response = api_client.get(url)
+        assert response.status_code == 200
+        assert len(response.data) == 2
+        assert [x['name'] for x in response.data] == ['test_group_lists', 'test_group_lists_2']
+
+
+
+       
 
 

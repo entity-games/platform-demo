@@ -4,7 +4,7 @@ import { RPSGameMode, characters } from 'rps-game-engine'
 
 import { audioManager } from '../audio_manager.js'
 
-import { getSceneLayoutData } from '../game_data/layout.js'
+import { getSceneLayoutData, getBounds } from '../game_data/layout.js'
 
 import { getSaveGameData } from '../game_data/save_data.js'
 import { CharacterInfoBox } from '../ui_elements/character_info_box.js'
@@ -33,7 +33,7 @@ class CharacterSelectScene extends Phaser.Scene {
       this.layoutData.ui.background.originY
     ).setAlpha(
       0.3
-    )
+    ).setDisplaySize(getBounds().w, getBounds().h)
 
     this.characterInfoBox = new CharacterInfoBox(this, this.layoutData, () => {
       if (this.selectedCharacter != null) {
@@ -48,6 +48,8 @@ class CharacterSelectScene extends Phaser.Scene {
       }
     })
 
+    const headshotLayout = this.layoutData.ui.headshots
+    
     // Graphics / effects
     this.selectionBorder = this.add.sprite(
       0, 0, 'global_texture', 'character_select_border'
@@ -56,6 +58,9 @@ class CharacterSelectScene extends Phaser.Scene {
     ).setOrigin(
       0,
       0
+    ).setDisplaySize(
+      headshotLayout.width,
+      headshotLayout.height
     )
 
     // Screen Header
@@ -77,7 +82,6 @@ class CharacterSelectScene extends Phaser.Scene {
 
     // Headshot layout
     const characterLayout = this.layoutData.ui.character
-    const headshotLayout = this.layoutData.ui.headshots
     let y = headshotLayout.y
     let x = headshotLayout.x
     const headshots = []
@@ -100,6 +104,11 @@ class CharacterSelectScene extends Phaser.Scene {
         characterLayout.originY
       )
 
+      let desiredHeight = characterLayout.height;
+      fullbody.displayHeight = desiredHeight;
+      let aspectRatio = fullbody.width / fullbody.height;
+      fullbody.displayWidth = desiredHeight * aspectRatio;
+
       let headshot
 
       if (character.locked && !this.characterUnlocked(character.id)) {
@@ -108,13 +117,20 @@ class CharacterSelectScene extends Phaser.Scene {
         ).setOrigin(
           headshotLayout.originX,
           headshotLayout.originy
+        ).setDisplaySize(
+          headshotLayout.width,
+          headshotLayout.height
         )
+
       } else {
         headshot = this.add.sprite(
           x, y, 'global_texture', character.id + '_headshot'
         ).setOrigin(
           headshotLayout.originX,
           headshotLayout.originY
+        ).setDisplaySize(
+          headshotLayout.width,
+          headshotLayout.height
         )
       }
 

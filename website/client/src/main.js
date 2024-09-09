@@ -61,6 +61,7 @@ Vue.component('wp-homepage-pitch', require('./components/wp-homepage-pitch.vue')
 Vue.component('wp-vcg-intro', require('./components/wp-vcg-intro.vue').default)
 Vue.component('wp-featured-game', require('./components/wp-featured-game.vue').default)
 Vue.component('wp-game-info', require('./components/wp-game-info.vue').default)
+Vue.component('wp-friend-groups', require('./components/wp-friends-group-modal.vue').default)
 
 // ######################################################
 // #
@@ -79,6 +80,7 @@ const store = new Vuex.Store({
     matchmakerUrl: clientConfig.matchmakerUrl,
     apiVersion: 'v1',
     games: null,
+    friends: null,
     isRefreshingToken: false
   },
   mutations: {
@@ -99,6 +101,12 @@ const store = new Vuex.Store({
     },
     setIsRefreshingToken (state, isRefreshing) {
       Vue.set(state, 'isRefreshingToken', isRefreshing)
+    },
+    setFriendList (state, friends) {
+      Vue.set(state, 'friends', friends)
+    },
+    setGroupList (state, groups) {
+      Vue.set(state, 'groups', groups)
     }
   },
   actions: {
@@ -130,6 +138,12 @@ const store = new Vuex.Store({
         return state.games
       }
       return null
+    },
+    friends: state => {
+      return state.friends
+    },
+    groups: state => {
+      return state.groups
     }
   }
 })

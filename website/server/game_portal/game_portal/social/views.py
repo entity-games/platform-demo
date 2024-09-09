@@ -12,7 +12,7 @@ from django.contrib.auth import get_user_model
 
 from livekit import api
 
-from .serializers import FriendSerializer, GroupSerializer, GroupMembershipSerializer
+from .serializers import FriendSerializer, GroupSerializer, GroupMembershipSerializer, UserGroupSerializer
 from .models import Friend, Group, GroupMembership
 
 User = get_user_model()
@@ -22,11 +22,13 @@ LIVEKIT_API_SECRET = os.getenv('LIVEKIT_API_SECRET')
 @api_view(['POST']) 
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
-def add_friend(request, user_id):
+def add_friend(request, user_name):
     user = request.user
-    friend = get_object_or_404(User, id=user_id)
+    friend = get_object_or_404(User, username=user_name)
     Friend.objects.add_friend(user, friend)
-    return Response(200) 
+    friends = Friend.objects.filter(user=user)
+    serializer = FriendSerializer(friends, many=True)
+    return Response(serializer.data, status=200) 
 
 @api_view(['POST']) 
 @authentication_classes([JWTAuthentication])
@@ -43,6 +45,19 @@ def remove_friend(request, user_id):
 def create_group(request, group_name):
     group = Group.objects.create(name=group_name, description="")
     GroupMembership.objects.create(user=request.user, group=group, is_admin=True)
+    return Response(201)
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def add_to_group(request, group_id, member_id):
+    group = Group.objects.get(id=group_id)
+    member = GroupMembership.objects.get(user=request.user, group=group)
+    if not member.is_admin:
+        return Response(401)
+
+    GroupMembership.objects.create(user=User.objects.get(id=member_id), group=group, is_admin=False)
+    
     return Response(201)
 
 @api_view(['GET'])
@@ -82,6 +97,16 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 class GroupMembershipViewSet(viewsets.ModelViewSet):
-    queryset = GroupMembership.objects.all()
+    queryset = User.objects.all()
     serializer_class = GroupMembershipSerializer
+
+    def get_object(self):
+        return GroupMembership.objects.filter(user=self.request.user)
+
+class UserGroupsView(generics.ListAPIView):
+    serializer_class = UserGroupSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Fetch all the groups the current user is a member of
+        return Group.objects.filter(members=self.request.user)

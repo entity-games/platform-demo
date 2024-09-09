@@ -12,20 +12,18 @@ import { BattleScene } from './scenes/fight_screen.js'
 import { PostFightScene } from './scenes/post_fight.js'
 import { GameOverScene } from './scenes/game_over.js'
 
-import { globalLayoutData } from './game_data/layout.js'
+import { initScale } from './game_data/layout.js'
 
 const config = {
   type: Phaser.AUTO,
-  // Experimental fullscreen stuff
   scale: {
-    mode: Phaser.Scale.FIT,
+    mode: Phaser.Scale.NO_CENTER,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
     fullscreenTarget: 'gameContainer'
-    // width: globalLayoutData.screenWidth,
-    // height: globalLayoutData.screenHeight
   },
   parent: 'gameContainer',
-  width: globalLayoutData.screenWidth,
-  height: globalLayoutData.screenHeight,
+  width: window.innerWidth,
+  height: window.innerHeight,
   scene: [
     BootScene,
     LoadingScene,
@@ -42,6 +40,12 @@ const config = {
 }
 
 const game = new Phaser.Game(config) // eslint-disable-line
+initScale()
+
+window.addEventListener('resize', () => {
+  initScale()
+  game.scale.resize(window.innerWidth, window.innerHeight);
+});
 
 if (window.registerGameUnloadedListener) {
   window.registerGameUnloadedListener(() => {
